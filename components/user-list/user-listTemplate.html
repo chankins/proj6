@@ -1,0 +1,12 @@
+<!doctype html>
+<html>
+<head>
+    <title>CS142 Project #5</title>
+</head>
+<body>
+    <h1 class="cs142-main-user-title"> Users </h1>
+    <li class="cs142-main-usernames" ng-repeat="user in main.users" ng-click="usernameClicked(user)"> 
+    {{user.first_name + ' ' + user.last_name}}
+    </li>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head>
+    <title>CS142 Project #5</title>
+</head>
+<body>
+	<h1 class="cs142-photo-header"> {{p.user.first_name}}'s Photos </h1>
+	<div ng-repeat= "i in p.photos">
+    <md-card class="md-card">
+ 		<img ng-src="images/{{i.file_name}}" alt="image caption">
+ 		<md-card-content>
+   			<h2>{{i.file_name}}</h2> <!-- do we need to display the name here -->
+   			<div ng-if="!i.comments">Be the first to add a comment!</div>
+   			<div class="comment-block" ng-repeat="comment in i.comments">
+   				<span class="comment-username" ng-click="switchUser(comment.user._id)">{{comment.user.first_name + ' ' + comment.user.last_name}}: </span>
+   				<span>{{comment.comment}}</span>
+   				<div class="comment-datetime">{{comment.date_time}}</div>
+   			</div>
+ 		</md-card-content>
+ 		<md-card-footer>
+   			Photo posted: {{i.date_time}}
+ 		</md-card-footer>
+	</md-card>
+	</div>
+</body>
+</html>

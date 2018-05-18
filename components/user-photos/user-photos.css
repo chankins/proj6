@@ -1,0 +1,25 @@
+.md-card {
+	width:75%;
+	margin:20px;
+}
+
+.cs142-photo-header {
+	margin:20px;
+}
+
+.comment-username {
+	cursor: pointer;
+	font-weight: bold;
+	color:#ADD8E6;
+}
+
+.comment-datetime {
+	font-size:smaller;
+	color:#909090;
+	white-space: nowrap;
+}
+
+.comment-block {
+	margin-top:10px;
+	margin-bottom:10px;
+}

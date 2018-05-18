@@ -1,0 +1,13 @@
+<!doctype html>
+<html>
+<head>
+    <title>CS142 Project #5</title>
+</head>
+<body>
+	<div class = "cs142-main-header">
+    <h1> {{main.currUser.first_name + ' ' + main.currUser.last_name}} </h1>
+    <h2> <span> Homeland: {{main.currUser.location}}</span>  |  <span>Occupation: {{main.currUser.occupation}}</span> </h2>
+    <p class="desc">  Description: {{main.currUser.description}} </p>
+	<md-button class="md-raised" ng-click="openPhotoView()"> Photos </md-button>
+</body>
+</html>
