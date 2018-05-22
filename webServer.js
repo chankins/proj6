@@ -129,7 +129,11 @@ app.get('/test/:p1', function (request, response) {
  * URL /user/list - Return all the User object.
  */
 app.get('/user/list', function (request, response) {
-    response.status(200).send(cs142models.userListModel());
+    User.find(function (err, users) {
+        // TODO: need to remove unecessary arguments being returned
+        // need to see if this is the proper format to send across
+        response.status(200).send(JSON.parse(JSON.stringify(users)));
+    }); 
 });
 
 /*
@@ -137,13 +141,14 @@ app.get('/user/list', function (request, response) {
  */
 app.get('/user/:id', function (request, response) {
     var id = request.params.id;
-    var user = cs142models.userModel(id);
-    if (user === null) {
-        console.log('User with _id:' + id + ' not found.');
-        response.status(400).send('Not found');
-        return;
-    }
-    response.status(200).send(user);
+    User.findOne({_id: id}, function (err, user) {
+        if (user === null) {
+            console.log('User with _id:' + id + ' not found.');
+            response.status(400).send('Not found');
+            return;
+        }
+        response.status(200).send(JSON.parse(JSON.stringify(user)));
+    });
 });
 
 /*

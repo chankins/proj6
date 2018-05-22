@@ -9,6 +9,7 @@ cs142App.controller('UserListController', ['$scope','$location','$resource',
 
         var users = $resource('/user/list');
         users.query({}, function(obj) {
+            console.log(obj)
             $scope.main.users = obj;
         });
         
