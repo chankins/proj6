@@ -1,28 +1,21 @@
 'use strict';
 
-cs142App.controller('UserPhotosController', ['$scope', '$routeParams','$location',
-  function($scope, $routeParams, $location) {
+cs142App.controller('UserPhotosController', ['$scope', '$routeParams','$location','$resource',
+  function($scope, $routeParams, $location, $resource) {
 
     var userId = $routeParams.userId;
     $scope.p = {};
 
-    $scope.userCallback = function(model) {
-        var obj = JSON.parse(model);
-        $scope.$apply(function() {
-            $scope.p.user = obj;
-            $scope.$parent.main.context = obj.first_name + '\'s Photos';
-        });
-    };
+    var user = $resource('/user/:id');
+    user.get({id: userId}, function(obj) {
+        $scope.p.user = obj;
+        $scope.$parent.main.context = obj.first_name + '\'s Profile';
+    });
 
-    $scope.photoCallback = function(model) {
-        var obj = JSON.parse(model);
-        $scope.$apply(function() {
-            $scope.p.photos = obj;
-        });
-    };
-
-    $scope.$parent.FetchModel('/user/'+userId, $scope.userCallback);
-    $scope.$parent.FetchModel('/photosOfUser/'+userId, $scope.photoCallback);
+    var photos = $resource('/photosOfUser/:id');
+    photos.query({id: userId}, function(obj) {
+        $scope.p.photos = obj;
+    });
 
     $scope.switchUser = function(newUserId) {
       $location.url('/users/'+newUserId);

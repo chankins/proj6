@@ -1,6 +1,6 @@
 'use strict';
 
-var cs142App = angular.module('cs142App', ['ngRoute', 'ngMaterial']);
+var cs142App = angular.module('cs142App', ['ngRoute', 'ngMaterial','ngResource']);
 
 cs142App.config(['$routeProvider',
     function ($routeProvider) {
@@ -27,29 +27,15 @@ cs142App.config(['$mdThemingProvider',
         $mdThemingProvider.theme('default').dark();
 }]);
 
-cs142App.controller('MainController', ['$scope', '$location',
-    function ($scope,$location) {
+cs142App.controller('MainController', ['$scope', '$location', '$resource',
+    function ($scope, $location, $resource) {
 
         $scope.main = {};
         $scope.main.context = 'PhotoGram';
 
-        $scope.FetchModel = function(url, cb) {
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function() { 
-                if (this.readyState!== 4 || this.status != 200 ) { return; }
-                cb(this.responseText);
-            };
-            xhr.open("GET", url);
-            xhr.send();
-        };
-
-        $scope.versionCallback = function(model) {
-            var obj = JSON.parse(model);
-            $scope.$apply(function() {
-                $scope.main.v = obj.__v;
-            });
-        };
-
-        $scope.FetchModel('/test/info', $scope.versionCallback);
+        var version = $resource('/test/info');
+        version.get({}, function(obj) {
+            $scope.main.v = obj.version;
+        });
         
     }]);

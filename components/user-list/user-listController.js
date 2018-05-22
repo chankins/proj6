@@ -1,21 +1,20 @@
 'use strict';
 
-cs142App.controller('UserListController', ['$scope','$location',
+cs142App.controller('UserListController', ['$scope','$location','$resource',
     
-    function ($scope, $location) {
-        $scope.doneCallback = function(model) {
-            var obj = JSON.parse(model);
-            $scope.$apply(function() {
-                $scope.main.users = obj;
-            });
-        };
+    function ($scope, $location, $resource) {
+
         $scope.main = {};
         $scope.main.context = 'Users';
 
-        $scope.FetchModel('/user/list', $scope.doneCallback);
+        var users = $resource('/user/list');
+        users.query({}, function(obj) {
+            $scope.main.users = obj;
+        });
         
         $scope.usernameClicked = function(user) {
             $location.url('/users/'+user._id);
         };
     }]);
+
 
