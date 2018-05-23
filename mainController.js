@@ -18,7 +18,7 @@ cs142App.config(['$routeProvider',
                 controller: 'UserPhotosController'
             }).
             otherwise({
-                redirectTo: '/users/:userId'
+                redirectTo: '/users/'
             });
     }]);
 

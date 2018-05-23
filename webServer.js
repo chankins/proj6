@@ -128,11 +128,16 @@ app.get('/test/:p1', function (request, response) {
 /*
  * URL /user/list - Return all the User object.
  */
+
 app.get('/user/list', function (request, response) {
-    User.find(function (err, users) {
-        // TODO: need to remove unecessary arguments being returned
-        // need to see if this is the proper format to send across
+    User.find({}, '_id first_name last_name', function (err, users) {
+        if (!users) {
+            console.log('Users were not found, something crazy happened tbh.');
+            response.status(400).send('Not found');
+            return;
+        }   
         response.status(200).send(JSON.parse(JSON.stringify(users)));
+        return;
     }); 
 });
 
@@ -141,13 +146,14 @@ app.get('/user/list', function (request, response) {
  */
 app.get('/user/:id', function (request, response) {
     var id = request.params.id;
-    User.findOne({_id: id}, function (err, user) {
-        if (user === null) {
+    User.findOne({_id: id}, '-__v', function (err, user) {
+        if (!user) {
             console.log('User with _id:' + id + ' not found.');
             response.status(400).send('Not found');
             return;
-        }
+        } 
         response.status(200).send(JSON.parse(JSON.stringify(user)));
+        return;
     });
 });
 
@@ -156,13 +162,16 @@ app.get('/user/:id', function (request, response) {
  */
 app.get('/photosOfUser/:id', function (request, response) {
     var id = request.params.id;
-    var photos = cs142models.photoOfUserModel(id);
-    if (photos.length === 0) {
+    Photo.find({user_id:id}, '-__v ', function(err, photos) {
+    if (!photos) {
         console.log('Photos for user with _id:' + id + ' not found.');
         response.status(400).send('Not found');
         return;
     }
-    response.status(200).send(photos);
+    console.log(photos)
+    response.status(200).send(JSON.parse(JSON.stringify(photos)));
+    return;
+    });
 });
 
 
