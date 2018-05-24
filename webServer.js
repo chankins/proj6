@@ -44,7 +44,7 @@ var express = require('express');
 var app = express();
 
 // XXX - Your submission should work without this line
-var cs142models = require('./modelData/photoApp.js').cs142models;
+//var cs142models = require('./modelData/photoApp.js').cs142models;
 
 mongoose.connect('mongodb://localhost/cs142project6');
 
@@ -153,7 +153,7 @@ app.get('/user/:id', function (request, response) {
             return;
         } 
         response.status(200).send(JSON.parse(JSON.stringify(user)));
-        return;
+        return; 
     });
 });
 
@@ -168,9 +168,37 @@ app.get('/photosOfUser/:id', function (request, response) {
         response.status(400).send('Not found');
         return;
     }
-    console.log(photos)
-    response.status(200).send(JSON.parse(JSON.stringify(photos)));
-    return;
+    
+    var newPhotos = [];
+    async.each(photos, function (photo, photo_callback) {
+        var newComments = [];
+        async.each(photo.comments, function(comment, comment_callback) {
+            User.findOne({'_id': comment.user_id}, 'first_name last_name', function (err, user) {
+                if (!user) {
+                    console.log('User with _id:' + id + ' not found.');
+                    response.status(400).send('Not found');
+                    return;
+                }
+                comment = JSON.parse(JSON.stringify(comment));
+                delete user.user_id;
+                delete comment.user_id;
+                comment.user = user;
+                newComments.push(comment);
+                comment_callback();
+            });
+        }, function(err) {
+            if(err) { response.status(400).send('Not found'); }
+            photo = JSON.parse(JSON.stringify(photo));
+            photo.comments = newComments;
+            newPhotos.push(photo);
+            photo_callback();
+        });   
+    }, function (err) {
+        if(err) { response.status(400).send('Not found'); }
+        response.status(200).send(JSON.parse(JSON.stringify(newPhotos)));
+        return;
+        });
+    
     });
 });
 
